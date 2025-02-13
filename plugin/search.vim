@@ -23,3 +23,4 @@ nnoremap <silent> <Plug>SearchNormal  :let g:browser_search_curpos = getpos('.')
 vnoremap <silent> <Plug>SearchVisual  :<c-u>call search#search_visual()<cr>
 
 command! -nargs=* -range BrowserSearch call search#start(<q-args>, visualmode(), <range>)
+

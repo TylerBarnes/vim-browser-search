@@ -81,6 +81,18 @@ let s:has_popup = has('textprop') && has('patch-8.2.0286')
 let s:has_float = has('nvim') && exists('*nvim_win_set_config')
 let s:text = ''
 let s:enginelist = []
+let g:browser_search_engines_order = [
+      \ 'perplexity',
+      \ 'github',
+      \ 'npm',
+      \ 'arxiv',
+      \ 'google',
+      \ 'wikipedia',
+      \ 'dockerhub',
+      \ 'github-marketplace',
+      \ 'mdn',
+      \ 'youtube'
+      \ ]
 function! search#start(text, visualmode, range) abort
   if empty(a:text)
     if a:visualmode == 'v' && a:range == 2
@@ -93,7 +105,7 @@ function! search#start(text, visualmode, range) abort
   endif
   if empty(search#util#trim(s:text, ' ')) | return | endif
 
-  let s:enginelist = keys(g:browser_search_builtin_engines)
+  let s:enginelist = g:browser_search_engines_order
   let engine_index = index(s:enginelist, g:browser_search_default_engine)
 
   if s:has_popup
@@ -139,7 +151,7 @@ function! search#start(text, visualmode, range) abort
     call nvim_win_set_option(s:winid, 'foldcolumn', '1')
     call nvim_win_set_option(s:winid, 'cursorline', v:true)
     call nvim_win_set_option(s:winid, 'winhl', 'Normal:Pmenu,FoldColumn:Pmenu,CursorLine:PmenuSel')
-    call nvim_win_set_cursor(s:winid, [engine_index+1, 0])
+    call nvim_win_set_cursor(s:winid, [1, 0])
 
     if has('nvim-0.5.0') && !empty(s:saved_cursor)
       set guicursor+=a:ver1-Cursor/lCursor
@@ -163,7 +175,7 @@ function! search#start(text, visualmode, range) abort
     nnoremap <nowait><buffer><silent> l     :<C-u>call <SID>select_and_search()<CR>
     nnoremap <nowait><buffer><silent> <Esc> :<C-u>call <SID>close_menu()<CR>
     for idx in range(len(s:enginelist))
-      execute printf('nmap <buffer><silent> %s :%s<CR><CR>', idx + 1, idx)
+      execute printf('nmap <buffer><silent> %s :%s<CR><CR>', idx + 1, idx + 1)
     endfor
     return
   endif
